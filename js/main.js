@@ -1,6 +1,5 @@
-currR = 1;
-currQ = 1;
-r = 10;
+// values for some of the visuals
+r = 10; // radius of circles
 colors = ['',
 		'#1484ff', // winter
 		'#0dd286', // spring
@@ -8,7 +7,7 @@ colors = ['',
 		'#ff6f4b', // summer
 		'#c8da04', // bonus 2
 		'#6445ea', // fall
-		'#fff' // not yet
+		'#fff' 		// future rounds
 		];
 
 rounds = [
@@ -23,9 +22,9 @@ rounds = [
 // wait until everything on page loads
 document.addEventListener("DOMContentLoaded", function() {
 	
-	// read data files
+	// read data file
 	Promise.all([
-		d3.csv('data/data-placeholder.csv')
+		d3.csv('data/data.csv')
 	]).then(function(files){
 
 		// munge data
@@ -43,7 +42,6 @@ document.addEventListener("DOMContentLoaded", function() {
 		teams.forEach(function(t){
 			t[1].sort(function(a,b){
 				return a.round - b.round || b.point - a.point;
-				// return a.round - b.round || a.Q - b.Q;
 			});
 		})
 		
@@ -212,7 +210,21 @@ document.addEventListener("DOMContentLoaded", function() {
 
 		}
 
+		// initial state: show round one scores
 		revealRound(1);
+
+		// to reveal another round's score, type the round number
+		// to reveal the total score after a certain round, type shift + the round number
+		document.addEventListener('keydown', function(event){
+			round = event.key;
+			console.log(round);
+			if ('0123456'.indexOf(round) > 0) {
+				revealRound(round);
+			}
+			if ('0!@#$%^'.indexOf(round) > 0) {
+				revealOverall('0!@#$%^'.indexOf(round));
+			}
+		});
 
 	});
 
